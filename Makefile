@@ -12,7 +12,8 @@ TEST=./build/test
 ## AQUI INCLUIR LOS ARCHIVOS .C 
 ## excepto main y test
 ## agregar un "\" al final de cada nombre
-SRC =
+SRC = src/graph.cpp
+	  
 
 ## nombre de los headers (automatico)
 HDRS = $(wildcard headers/*.hpp)
