@@ -9,6 +9,9 @@ namespace queue {
         /* Construye una cola */
         Heap() = default;
 
+        /** Destructor de la clase Heap. */
+        ~Heap();
+
         /** Construye una cola a partir de una cantidad de elementos. */
         void heapify(int n);
 

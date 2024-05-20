@@ -16,6 +16,9 @@ public:
     /** Constructor por defecto de la clase Queue. */
     Queue() = default;
 
+    /** Destructor por defecto de la clase Queue. */
+    ~Queue() = default;
+
     /** Construye una cola a partir de una cantidad de elementos. */
     void heapify(int n);
 

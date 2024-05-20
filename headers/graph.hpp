@@ -15,6 +15,9 @@ struct Graph{
     /** Constructor por defecto de la clase Graph. */
     Graph() = default;
 
+    /** Destructor por defecto de la clase Graph. */
+    ~Graph() = default;
+
     /** Constructor de la clase Graph.
     *   Genera un grafo con aristas aleatorias.
     *   @param v Cantidad de vértices del grafo.
