@@ -10,8 +10,8 @@ tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue& q){
     int n = g.edges.size();
 
     /* 1. Definimos dos arreglos de tamaño |V |, distancias y previos. */
-    vector<int> previos(g.edges.size(), -1);
-    vector<double> distancias(g.edges.size(), DBL_MAX);
+    vector<int> previos(n, -1);
+    vector<double> distancias(n, DBL_MAX);
 
     /* 3. Definimos la distancia del nodo raíz como 0, su nodo previo como −1, 
         y agregamos el par (distancia = 0, nodo = raíz) a Q */
@@ -22,11 +22,7 @@ tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue& q){
     /*4. Por cada nodo v distinto de la raíz en el grafo:
         • Definimos distancias[v] como infinita y previos[v] como indefinido.
         • Agregamos el par (distancia = ∞, nodo = v) a Q. */
-    for(int v = 1; v < n; v++){
-        distancias[v] = DBL_MAX;
-        previos[v] = -1;
-        //q.push(v, DBL_MAX); ==> ya está en el heapify
-    }
+    // ==> ya están en el heapify y en el vector de distancias y previos
 
     /* 5. Se espera que la creación de Q se resuelva por medio de un Heapify, que transforme un array
         con las distancias en una cola en tiempo lineal (O(n)).*/
