@@ -3,6 +3,7 @@
 
 #include <tuple>
 
+
 /** Definimos una estructura Q permita:
 • Almacenar pares de la forma (distancia, nodo).
 • Obtener y eliminar el par con menor distancia.
@@ -16,10 +17,7 @@ public:
     Queue() = default;
 
     /** Construye una cola a partir de una cantidad de elementos. */
-    void heapify(int i);
-
-    /** Inserta un par en la cola. */
-    void push(int node, double value);
+    void heapify(int n);
 
     /** Extrae el par con menor distancia de la cola. */
     std::tuple<int, double> extractMin();
@@ -33,5 +31,6 @@ public:
     /** Verifica si la cola está vacía. */
     bool empty();
 };
+
 
 #endif

@@ -1,35 +1,37 @@
 #include "../headers/dijkstra.hpp"
-#include "../headers/queue.hpp"
+#include "../headers/queue/queue.hpp"
 #include <vector>
 #include <tuple>
 #include <float.h>
 
+using namespace std;
 
+tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue& q){
+    int n = g.edges.size();
 
-std::tuple<std::vector<int>, std::vector<double>> dijkstra::dijkstra(const Graph& g, Queue& q){
     /* 1. Definimos dos arreglos de tamaño |V |, distancias y previos. */
-    std::vector<int> previos(g.edges.size(), -1);
-    std::vector<double> distancias(g.edges.size(), DBL_MAX);
+    vector<int> previos(g.edges.size(), -1);
+    vector<double> distancias(g.edges.size(), DBL_MAX);
 
     /* 3. Definimos la distancia del nodo raíz como 0, su nodo previo como −1, 
         y agregamos el par (distancia = 0, nodo = raíz) a Q */
     distancias[0] = 0;
     previos[0] = -1;
-    q.push(0, 0);
+    //q.push(0, 0); ==> ya está en el heapify
 
     /*4. Por cada nodo v distinto de la raíz en el grafo:
         • Definimos distancias[v] como infinita y previos[v] como indefinido.
         • Agregamos el par (distancia = ∞, nodo = v) a Q. */
-    for(int v = 1; v < g.edges.size(); v++){
+    for(int v = 1; v < n; v++){
         distancias[v] = DBL_MAX;
         previos[v] = -1;
-        q.push(v, DBL_MAX);
+        //q.push(v, DBL_MAX); ==> ya está en el heapify
     }
 
     /* 5. Se espera que la creación de Q se resuelva por medio de un Heapify, que transforme un array
         con las distancias en una cola en tiempo lineal (O(n)).*/
     /** hacer push y listo :v ??*/
-    
+    q.heapify(n);
 
     /* 6. Mientras Q no se encuentre vacío, repetimos: */
     while(!q.empty()){
@@ -50,7 +52,6 @@ std::tuple<std::vector<int>, std::vector<double>> dijkstra::dijkstra(const Graph
         } 
     }
 
-
     /* 7. Retornamos el arreglo de previos y distancias.  */
-    return std::make_tuple(std::move(previos), std::move(distancias));
+    return make_tuple(std::move(previos), std::move(distancias));
 }

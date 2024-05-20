@@ -13,6 +13,11 @@
 *   @param e Cantidad de aristas del grafo.
 */
 Graph::Graph(int v, int e){
+    if(v < 2 || e < v - 1 || e > v*(v-1)/2){
+        printf("No se puede generar un grafo con %d vértices y %d aristas\n", v, e);
+        exit(10);
+    }
+
     srand(time(NULL));
     edges.resize(v, std::vector<std::tuple<int, double>>());
 
@@ -38,9 +43,9 @@ Graph::Graph(int v, int e){
         double w = (((double)rand()+1)/((double)RAND_MAX+1));
 
         connect(a, b, w);
-        printf("Conectando %10d con %10d\n", a, b);
-        
-        printf("e: %d", e);
+
+        //printf("Conectando %10d con %10d\n", a, b);
+        //printf("e: %d", e);
     }
 }
 
