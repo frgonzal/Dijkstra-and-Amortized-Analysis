@@ -13,26 +13,23 @@ algoritmo, no existe la necesidad de aumentar la distancia, solo de reducirla).*
 class Queue {
 public:
 
-    /** Constructor por defecto de la clase Queue. */
-    Queue() = default;
-
-    /** Destructor por defecto de la clase Queue. */
-    ~Queue() = default;
+    /** Destructor de la clase Queue. */
+    virtual ~Queue() = default;
 
     /** Construye una cola a partir de una cantidad de elementos. */
-    void heapify(int n);
+    virtual void heapify(int n) = 0;
 
     /** Extrae el par con menor distancia de la cola. */
-    std::tuple<int, double> extractMin();
+    virtual std::tuple<int, double> extractMin() = 0;
 
     /** Disminuye el valor de un nodo en la cola. 
     *   @param node  Nodo a disminuir.
     *   @param value Nuevo valor del nodo.
     */
-    void decreaseKey(int node, double value);
+    virtual void decreaseKey(int node, double value) = 0;
 
     /** Verifica si la cola está vacía. */
-    bool empty();
+    virtual bool empty() = 0;
 };
 
 

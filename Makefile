@@ -12,13 +12,18 @@ TEST=./build/test
 ## AQUI INCLUIR LOS ARCHIVOS .C 
 ## excepto main y test
 ## agregar un "\" al final de cada nombre
-SRC = src/graph.cpp
-	  
+SRC = \
+	src/dijkstra.cpp \
+	src/graph.cpp \
+	src/queue/fibonacci.cpp \
+	src/queue/heap.cpp
+
 
 ## nombre de los headers (automatico)
 HDRS = $(wildcard headers/*.hpp)
 ## nombre de los .o (automatico)
 OBJS = $(SRC:./src/%.cpp=./build/%.o)
+
 
 
 all:
@@ -48,7 +53,9 @@ clean: $(wildcard build/*.o)
 	@ rm -f $(TEST)
 	@ rm -f $^
 
+
 help:
 	@echo " to run main --> make run"
 	@echo " to run test --> make test"
 	
+

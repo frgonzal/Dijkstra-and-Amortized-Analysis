@@ -3,10 +3,11 @@
 #include <vector>
 #include <tuple>
 #include <float.h>
+#include <memory>
 
 using namespace std;
 
-tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue& q){
+tuple<vector<int>, vector<double>> dijkstra(const Graph& g, std::unique_ptr<Queue>& q){
     int n = g.edges.size();
 
     /* 1. Definimos dos arreglos de tamaño |V |, distancias y previos. */
@@ -27,12 +28,12 @@ tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue& q){
     /* 5. Se espera que la creación de Q se resuelva por medio de un Heapify, que transforme un array
         con las distancias en una cola en tiempo lineal (O(n)).*/
     /** hacer push y listo :v ??*/
-    q.heapify(n);
+    q->heapify(n);
 
     /* 6. Mientras Q no se encuentre vacío, repetimos: */
-    while(!q.empty()){
+    while(!q->empty()){
         /* a) Obtenemos el par (d, v) con menor distancia en Q y lo eliminamos. */
-        auto [v, d] = q.extractMin();
+        auto [v, d] = q->extractMin();
 
         /* b) Por cada vecino u del nodo v: */
         for(auto [u, w] : g.edges[v]){
@@ -43,7 +44,7 @@ tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue& q){
             if(distancias[u] > distancias[v] + w){
                 distancias[u] = distancias[v] + w;
                 previos[u] = v;
-                q.decreaseKey(u, distancias[u]);
+                q->decreaseKey(u, distancias[u]);
             }
         } 
     }
