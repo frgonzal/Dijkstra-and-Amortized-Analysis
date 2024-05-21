@@ -1,4 +1,5 @@
 #include "../../headers/queue/fibonacci.hpp"
+#include <cstddef>
 #include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +13,7 @@ using namespace queue;
 /** PUBLIC */
 
 int Fibonacci::Node::childs(){
+    printf("Childs\n");
     int count = 0;
     Node *x = child;
 
@@ -23,10 +25,12 @@ int Fibonacci::Node::childs(){
         x = x->right;
     } while(x != child);
 
+    printf("End Childs\n");
     return count;
 }
 
 void Fibonacci::heapify(int n){
+    printf("Heapify\n");
     distances = new double[n];
     nodes = new Node*[n];
 
@@ -44,12 +48,13 @@ void Fibonacci::heapify(int n){
         nodes[v] = new Fibonacci::Node(v);
         insert(nodes[v]);
     }
+    printf("End Heapify\n");
 }
 
 void Fibonacci::consolidate(){
-    //printf("size: %d\n", size);
-    //std::vector<Node*> toMerge(std::ceil(std::log2((double)n)), nullptr);
-    std::vector<Node*> toMerge(n, nullptr);
+    printf("Consolidate\n");
+    std::vector<Node*> toMerge(std::ceil(std::log2((double)n))+1, nullptr);
+    //std::vector<Node*> toMerge(n, nullptr);
     while(linkedList != nullptr){
         Node* x = linkedList;
         remove(x);
@@ -66,34 +71,51 @@ void Fibonacci::consolidate(){
 
     min = nullptr;
     for(int i=0; i<toMerge.size(); i++){
-        if(toMerge[i] != nullptr)
+        if(toMerge[i] != nullptr){
             insert(toMerge[i]);
+            if(min == nullptr || distances[toMerge[i]->vertex] < distances[min->vertex])
+                min = toMerge[i];
+            
+            if(toMerge[i]->degree != toMerge[i]->childs()){
+                printf("Error: degree != childs\n");
+                exit(11);
+            }
+
+        }
     }
+    printf("End Consolidate\n");
 }
 
 std::tuple<int, double> Fibonacci::extractMin(){
+    printf("Extract Min\n");
+    if(min == nullptr){
+        printf("Error: extract min from empty queue\n");
+        exit(10);
+    }
+
     Node *x = min;
     while(x->child != nullptr){
         Node *y = x->child;
-        y->parent = nullptr;
         cut(y);
         insert(y);
     }
     remove(x);
 
     int v = x->vertex;
-    delete nodes[v];
-    nodes[v] = nullptr;
+    //delete nodes[v];
+    //nodes[v] = nullptr;
 
     consolidate();
+    printf("End Extract Min\n");
     return std::make_tuple(v, distances[v]);
 }
 
 
 void Fibonacci::decreaseKey(int node, double value){
+    printf("decreaseKey\n");
     if(nodes[node] == nullptr)
         return;
-    if(distances[node] < value)
+    if(distances[node] <= value)
         return;
 
     distances[node] = value;
@@ -106,6 +128,13 @@ void Fibonacci::decreaseKey(int node, double value){
         cut(x);
         insert(x);
     }
+
+    if(x->parent != nullptr && distances[node] < distances[x->parent->vertex]){
+        printf("Error: decrease key with parent\n");
+        exit(10);
+    }
+
+    printf("End decreaseKey\n");
 }
 
 
@@ -124,6 +153,7 @@ Fibonacci::~Fibonacci(){
 
 /** Une dos nodos en una lista doblemente enlazada */
 void Fibonacci::link(Node* y, Node* x){
+    printf("Link\n");
     if(y == nullptr){
         x->left = x;
         x->right = x;
@@ -136,10 +166,12 @@ void Fibonacci::link(Node* y, Node* x){
     x->right = z;
     y->right = x;
     x->left = y;
+    printf("End Link\n");
 }
 
 /** Une dos B_k en un B_{k+1} */
 Fibonacci::Node* Fibonacci::merge(Node* y, Node* x){
+    printf("Merge\n");
     if(distances[y->vertex] > distances[x->vertex])
         std::swap(x, y);
 
@@ -149,30 +181,29 @@ Fibonacci::Node* Fibonacci::merge(Node* y, Node* x){
 
     (y->degree)++;
     
+    printf("End Merge\n");
     return y;
 }
 
 
 /** Realiza el corte de un nodo en la cola de Fibonacci. */
 void Fibonacci::cut(Node* x){
-    x->left->right = x->right;
-    x->right->left = x->left;
-    x->left = x;
-    x->right = x;
-    x->marked = false;
+    printf("Cut\n");
+    if(x->parent == nullptr){
+        printf("Node: %d, w: %f\n", x->vertex, distances[x->vertex]);
+        printf("Error: cut node without parent\n");
+        exit(10);
+    }
 
     if(x->parent != nullptr){
-
         Node *parent = x->parent;
         x->parent = nullptr;
 
-        (parent->degree)--;
-
-        if(parent->degree == 0)
-            parent->child = nullptr;
-        else
+        if(parent->child == x)
             parent->child = x->right;
-
+        if(parent->child == x)
+            parent->child = nullptr;
+        (parent->degree)--;
 
         if(!parent->marked && parent->parent != nullptr)
             parent->marked = true;
@@ -182,11 +213,24 @@ void Fibonacci::cut(Node* x){
             insert(parent);
         }
     }
+
+    x->left->right = x->right;
+    x->right->left = x->left;
+    x->left = x;
+    x->right = x;
+    x->marked = false;
+    printf("End Cut\n");
 }
 
 
 /** Inserta un nodo en la cola de Fibonacci. */
 void Fibonacci::insert(Node* x){
+    printf("Insert\n");
+    if(x->right != x || x->parent != nullptr){
+        printf("Error: insert node with parent\n");
+        exit(10);
+    }
+
     Node *first = linkedList;
 
     if(first == nullptr){
@@ -201,26 +245,30 @@ void Fibonacci::insert(Node* x){
         first->left = x;
     }
 
-    if(min == nullptr)
-        min = x;
-
-    /** update min */
-    if(distances[x->vertex] < distances[min->vertex])
-        min = x;
-
     size++;
+    printf("End Insert\n");
 }
 
 
 /** Realiza el corte de un nodo. */
 void Fibonacci::remove(Node* x){
-    if(linkedList == x)
+    printf("Remove\n");
+    if(x->parent != nullptr){
+        printf("Error: remove node with parent\n");
+        printf("x: %d, w: %f\n", x->vertex, distances[x->vertex]);
+        printf("x->parent: %d, w: %f\n", x->parent->vertex, distances[x->parent->vertex]);
+        exit(10);
+    }
+
+
+    if (linkedList == x)
         linkedList = x->right;
 
-    if(size == 1){
+    if (linkedList == x)
         linkedList = nullptr;
+
+    if(min == x)
         min = nullptr;
-    }
 
     x->left->right = x->right;
     x->right->left = x->left;
@@ -228,9 +276,6 @@ void Fibonacci::remove(Node* x){
     x->right = x;
     x->left = x;
 
-    if(min == x){
-        min = nullptr;
-    }
-
     size--;
+    printf("End Remove\n");
 }

@@ -42,7 +42,7 @@ namespace queue {
             Node(int vertex) : vertex(vertex), parent(nullptr), child(nullptr), left(this), right(this), marked(false), degree(0){};
             ~Node() = default;
 
-            int vertex;     // vertice
+            const int vertex;     // vertice
             Node* parent;
             Node* child;    
             Node* left;
