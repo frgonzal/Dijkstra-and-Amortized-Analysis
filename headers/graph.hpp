@@ -38,7 +38,14 @@ struct Graph{
     *   @param v Vértice destino.
     *   @return true si u y v están conectados, false en caso contrario.
     */
-    bool isConnectedTo(int u, int v);
+    bool isConnectedTo(int u, int v) const;
+
+    /** Obtiene el peso de la arista que conecta 2 vertices.
+    *   @param u Vértice origen.
+    *   @param v Vértice destino.
+    *   @return Peso de la arista que conecta u y v.
+    */
+    double getWeight(int u, int v) const;
 };
 
 

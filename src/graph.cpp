@@ -71,9 +71,22 @@ void Graph::connect (int u, int v, double w){
 *   @param v Vértice destino.
 *   @return true si u y v están conectados, false en caso contrario.
 */
-bool Graph::isConnectedTo(int u, int v){
+bool Graph::isConnectedTo(int u, int v) const{
     for(auto [z, _] : edges[u])
         if(z == v) return true;
 
     return false;
+}
+
+
+/** Obtiene el peso de la arista que conecta 2 vertices.
+*   @param u Vértice origen.
+*   @param v Vértice destino.
+*   @return Peso de la arista que conecta u y v.
+*/
+double Graph::getWeight(int u, int v) const{
+    for(auto [z, w] : edges[u])
+        if(z == v) return w;
+
+    return -1;
 }
