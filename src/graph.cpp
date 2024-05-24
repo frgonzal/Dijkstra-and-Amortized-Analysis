@@ -1,9 +1,10 @@
 #include "../headers/graph.hpp"
+#include <iostream>
 #include <stdlib.h>
 #include <vector>
-#include <time.h>
 #include <stdio.h>
-
+#include <algorithm>
+#include <random>
 
 
 
@@ -12,14 +13,15 @@
 *   @param v Cantidad de vértices del grafo.
 *   @param e Cantidad de aristas del grafo.
 */
-Graph::Graph(int v, int e){
+Graph::Graph(int v, int e, int seed){
     if(v < 2 || e < v - 1 || e > v*(v-1)/2){
         printf("No se puede generar un grafo con %d vértices y %d aristas\n", v, e);
         exit(10);
     }
 
-    srand(time(NULL));
+    srand(seed);
     edges.resize(v, std::vector<std::tuple<int, double>>());
+
 
     for(int i = 1; i < v; i++){
 
@@ -32,21 +34,25 @@ Graph::Graph(int v, int e){
         connect(u, i, weight);
     }
 
-    e -= (v - 1);
-    while (e--){
-        int a = rand() % v;
-        while(edges[a].size() == v) a = rand() % v;
+    std::vector<std::tuple<int, int>> vertices;
+    vertices.reserve(v*(v-1)/2 - (v-1));
 
-        int b = rand() % v;
-        while(edges[b].size() == v || a == b || isConnectedTo(a, b)) b = rand() % v;
+    for(int i = 0; i < v; i++)
+        for(int j = i+1; j < v; j++)
+            vertices.push_back(std::make_tuple(i, j));
+    
+    std::shuffle(vertices.begin(), vertices.end(), std::default_random_engine(seed));
 
-        double w = (((double)rand()+1)/((double)RAND_MAX+1));
-
-        connect(a, b, w);
-
-        //printf("Conectando %10d con %10d\n", a, b);
-        //printf("e: %d", e);
+    for(int i=0; i<e-(v-1); i++){
+        auto [u, v] = vertices[i];
+        double weight = (((double)rand()+1)/((double)RAND_MAX+1));
+        if(!isConnectedTo(u, v))
+            connect(u, v, weight);
+        else
+            e++;
     }
+
+    return;
 }
 
 
@@ -88,5 +94,6 @@ double Graph::getWeight(int u, int v) const{
     for(auto [z, w] : edges[u])
         if(z == v) return w;
 
-    return -1;
+    std::cout << "Error en la arista de " << u << " a " << v << std::endl;
+    exit(10);
 }
