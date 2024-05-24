@@ -1,5 +1,4 @@
 #include "../../headers/queue/fibonacci.hpp"
-#include <cstddef>
 #include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +12,6 @@ using namespace queue;
 /** PUBLIC */
 
 int Fibonacci::Node::childs(){
-    printf("Childs\n");
     int count = 0;
     Node *x = child;
 
@@ -25,12 +23,10 @@ int Fibonacci::Node::childs(){
         x = x->right;
     } while(x != child);
 
-    printf("End Childs\n");
     return count;
 }
 
 void Fibonacci::heapify(int n){
-    printf("Heapify\n");
     distances = new double[n];
     nodes = new Node*[n];
 
@@ -48,11 +44,9 @@ void Fibonacci::heapify(int n){
         nodes[v] = new Fibonacci::Node(v);
         insert(nodes[v]);
     }
-    printf("End Heapify\n");
 }
 
 void Fibonacci::consolidate(){
-    printf("Consolidate\n");
     std::vector<Node*> toMerge(std::ceil(std::log2((double)n))+1, nullptr);
     //std::vector<Node*> toMerge(n, nullptr);
     while(linkedList != nullptr){
@@ -83,11 +77,9 @@ void Fibonacci::consolidate(){
 
         }
     }
-    printf("End Consolidate\n");
 }
 
 std::tuple<int, double> Fibonacci::extractMin(){
-    printf("Extract Min\n");
     if(min == nullptr){
         printf("Error: extract min from empty queue\n");
         exit(10);
@@ -102,17 +94,15 @@ std::tuple<int, double> Fibonacci::extractMin(){
     remove(x);
 
     int v = x->vertex;
-    //delete nodes[v];
-    //nodes[v] = nullptr;
+    delete nodes[v];
+    nodes[v] = nullptr;
 
     consolidate();
-    printf("End Extract Min\n");
     return std::make_tuple(v, distances[v]);
 }
 
 
 void Fibonacci::decreaseKey(int node, double value){
-    printf("decreaseKey\n");
     if(nodes[node] == nullptr)
         return;
     if(distances[node] <= value)
@@ -133,8 +123,6 @@ void Fibonacci::decreaseKey(int node, double value){
         printf("Error: decrease key with parent\n");
         exit(10);
     }
-
-    printf("End decreaseKey\n");
 }
 
 
@@ -153,7 +141,6 @@ Fibonacci::~Fibonacci(){
 
 /** Une dos nodos en una lista doblemente enlazada */
 void Fibonacci::link(Node* y, Node* x){
-    printf("Link\n");
     if(y == nullptr){
         x->left = x;
         x->right = x;
@@ -166,12 +153,10 @@ void Fibonacci::link(Node* y, Node* x){
     x->right = z;
     y->right = x;
     x->left = y;
-    printf("End Link\n");
 }
 
 /** Une dos B_k en un B_{k+1} */
 Fibonacci::Node* Fibonacci::merge(Node* y, Node* x){
-    printf("Merge\n");
     if(distances[y->vertex] > distances[x->vertex])
         std::swap(x, y);
 
@@ -181,14 +166,12 @@ Fibonacci::Node* Fibonacci::merge(Node* y, Node* x){
 
     (y->degree)++;
     
-    printf("End Merge\n");
     return y;
 }
 
 
 /** Realiza el corte de un nodo en la cola de Fibonacci. */
 void Fibonacci::cut(Node* x){
-    printf("Cut\n");
     if(x->parent == nullptr){
         printf("Node: %d, w: %f\n", x->vertex, distances[x->vertex]);
         printf("Error: cut node without parent\n");
@@ -219,13 +202,11 @@ void Fibonacci::cut(Node* x){
     x->left = x;
     x->right = x;
     x->marked = false;
-    printf("End Cut\n");
 }
 
 
 /** Inserta un nodo en la cola de Fibonacci. */
 void Fibonacci::insert(Node* x){
-    printf("Insert\n");
     if(x->right != x || x->parent != nullptr){
         printf("Error: insert node with parent\n");
         exit(10);
@@ -246,13 +227,11 @@ void Fibonacci::insert(Node* x){
     }
 
     size++;
-    printf("End Insert\n");
 }
 
 
 /** Realiza el corte de un nodo. */
 void Fibonacci::remove(Node* x){
-    printf("Remove\n");
     if(x->parent != nullptr){
         printf("Error: remove node with parent\n");
         printf("x: %d, w: %f\n", x->vertex, distances[x->vertex]);
@@ -277,5 +256,4 @@ void Fibonacci::remove(Node* x){
     x->left = x;
 
     size--;
-    printf("End Remove\n");
 }
