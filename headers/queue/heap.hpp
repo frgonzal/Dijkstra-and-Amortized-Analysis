@@ -1,3 +1,5 @@
+#ifndef HEAP_HPP
+#define HEAP_HPP
 #include "queue.hpp"
 
 
@@ -31,3 +33,5 @@ namespace queue {
 
     };
 }
+
+#endif

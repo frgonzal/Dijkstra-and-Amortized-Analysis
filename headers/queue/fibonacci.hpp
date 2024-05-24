@@ -1,5 +1,6 @@
+#ifndef FIBONACCI_HPP
+#define FIBONACCI_HPP
 #include "queue.hpp"
-
 
 
 namespace queue {
@@ -83,3 +84,6 @@ namespace queue {
         void cut(Node* x);
     };
 }
+
+
+#endif

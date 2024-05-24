@@ -23,7 +23,7 @@ struct Graph{
     *   @param v Cantidad de vértices del grafo.
     *   @param e Cantidad de aristas del grafo.
     */
-    Graph(int v, int e);
+    Graph(int v, int e, int seed);
 
     /** Conecta 2 vertices en un grafo.
     *   @param u Vértice origen.
