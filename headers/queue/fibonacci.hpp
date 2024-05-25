@@ -55,7 +55,7 @@ namespace queue {
         };
 
         /** punteros a los nodos de las colas, 
-        *   tal que nodes[v] es el nodeo del vertice
+        *   tal que nodes[v] es el nodo del vertice
         *   v en la cola de Fibonacci.
         */
         Node **nodes;
