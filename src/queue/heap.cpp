@@ -1,4 +1,7 @@
 #include "../../headers/queue/heap.hpp"
+#include <float.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 using namespace queue;
