@@ -12,10 +12,6 @@ además de poder modificar su distancia con la función decreaseKey (en el conte
 algoritmo, no existe la necesidad de aumentar la distancia, solo de reducirla).*/
 class Queue {
 public:
-
-    /** Destructor de la clase Queue. */
-    virtual ~Queue() = default;
-
     /** Construye una cola a partir de una cantidad de elementos. */
     virtual void heapify(int n) = 0;
 
