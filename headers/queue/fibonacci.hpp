@@ -1,10 +1,27 @@
 #ifndef FIBONACCI_HPP
 #define FIBONACCI_HPP
 #include "queue.hpp"
+#include <vector>
 
 
 namespace queue {
 
+    namespace Fib {
+        /** Estructura de un nodo en la cola de Fibonacci. */
+        struct Node {
+            Node(int vertex) : vertex(vertex), parent(nullptr), child(nullptr), left(this), right(this), marked(false), degree(0){};
+            ~Node() = default;
+
+            const int vertex;     // vertice
+            Node* parent;
+            Node* child;    
+            Node* left;
+            Node* right;
+            bool marked;
+            int degree;     // grado del nodo, si es un B_k entonces degree = k
+        };
+    }
+    using Fib::Node;
 
     class Fibonacci : public Queue {
     public:
@@ -36,29 +53,15 @@ namespace queue {
         /** Cantidad de nodos en la cola, no confundir con n! */
         int size;
 
-        double *distances;
+        std::vector<double> distances;
 
-        /** Estructura de un nodo en la cola de Fibonacci. */
-        struct Node {
-            Node(int vertex) : vertex(vertex), parent(nullptr), child(nullptr), left(this), right(this), marked(false), degree(0){};
-            ~Node() = default;
-
-            const int vertex;     // vertice
-            Node* parent;
-            Node* child;    
-            Node* left;
-            Node* right;
-            bool marked;
-            int degree;     // grado del nodo, si es un B_k entonces degree = k
-
-            int childs();
-        };
+        std::vector<Node*> toMerge;
 
         /** punteros a los nodos de las colas, 
         *   tal que nodes[v] es el nodo del vertice
         *   v en la cola de Fibonacci.
         */
-        Node **nodes;
+        std::vector<Node*> nodes;
 
         /** puntero al nodo con menor distancia en la cola. */
         Node* min;
