@@ -3,7 +3,6 @@
 #include "../headers/queue/fibonacci.hpp"
 #include "../headers/dijkstra.hpp"
 #include <stdlib.h>
-#include <iostream>
 #include <float.h>
 #include <tuple>
 #include <vector>
@@ -113,7 +112,7 @@ std::tuple<std::vector<int>, std::vector<double>> test_bin_heap(Graph &g){
     std::chrono::duration<double> elapsed = end - start;
     std::cout << "Bin Heap time: " << elapsed.count() << "\n";
 
-    return std::make_tuple(paths, distances);
+    return std::make_tuple(std::move(paths), std::move(distances));
 }
 
 std::tuple<std::vector<int>, std::vector<double>> test_fib_heap(Graph &g){
@@ -125,7 +124,7 @@ std::tuple<std::vector<int>, std::vector<double>> test_fib_heap(Graph &g){
     std::chrono::duration<double> elapsed = end - start;
     std::cout << "Fib Heap time: " << elapsed.count() << "\n";
 
-    return std::make_tuple(paths, distances);
+    return std::make_tuple(std::move(paths), std::move(distances));
 }
 
 
@@ -138,20 +137,28 @@ void test(int i, int j, int v, int e, int seed){
     std::chrono::duration<double> elapsed = end - start;
     std::cout << "Graph creation time: " << elapsed.count() << "\n";
 
-    //test_graph(g);
-    auto [p1, d1] = test_bin_heap(g);
     auto [p2, d2] = test_fib_heap(g);
+    auto [p1, d1] = test_bin_heap(g);
+    test_path(g, p1, d1);
     test_vectores<int>(p1, p2);
     test_vectores<double>(d1, d2);
 }
 
 int main(){
     for(int i=10; i<=14; i+=2){
-        for(int j=16; j<=22; j++){
+        for(int j=20; j<=22; j++){
             for(int k=0; k<50; k++){
                 int v = 1<<i, e = 1<<j, seed = i*12345 + j*6789;
-                if(v > 1 && e >= v - 1 && e <= v*(v-1)/2)
-                    test(i, j, v, e, seed);
+                if(e > v*(v-1)/2){
+                    std::cout << "WARNING: Too many edges\n";
+                    e = v*(v-1)/2 - 1;
+                }
+                if(e < v-1 ){
+                    std::cout << "WARNING: Too few edges\n";
+                    e = v + 1;
+                }
+
+                test(i, j, v, e, seed);
             }
         }
     }
