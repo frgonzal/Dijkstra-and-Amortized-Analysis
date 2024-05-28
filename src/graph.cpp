@@ -1,10 +1,9 @@
 #include "../headers/graph.hpp"
-#include <iostream>
 #include <stdlib.h>
 #include <vector>
-#include <stdio.h>
 #include <algorithm>
 #include <random>
+#include <stdexcept>
 
 
 
@@ -58,7 +57,7 @@ Graph::Graph(int v, int e, int seed){
 *   @param v Vértice destino.
 *   @param w Peso de la arista que conecta u y v.
 */
-void Graph::connect (int u, int v, double w){
+void Graph::connect(int u, int v, double w){
     if(u == v) 
         throw std::runtime_error("No se pueden conectar un nodo consigo mismo");
 
