@@ -2,7 +2,7 @@
 #define DIJKSTRA_HPP
 
 #include "graph.hpp"
-#include "queue/queue.hpp"
+#include "queue/priqueue.hpp"
 #include <vector>
 #include <tuple>
 
@@ -17,6 +17,6 @@
 *   @return Tupla con 2 vectores, el primero contiene los padres de cada nodo en el árbol de caminos más cortos
 *           y el segundo contiene las distancias de cada nodo a la raíz.
 */ 
-std::tuple<std::vector<int>, std::vector<double>> dijkstra(const Graph& g, Queue* q);
+std::tuple<std::vector<int>, std::vector<double>> dijkstra(const Graph& g, PriorityQueue* q);
 
 #endif

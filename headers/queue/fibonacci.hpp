@@ -1,6 +1,6 @@
 #ifndef FIBONACCI_HPP
 #define FIBONACCI_HPP
-#include "queue.hpp"
+#include "priqueue.hpp"
 #include <vector>
 
 
@@ -23,7 +23,7 @@ namespace queue {
     }
     using Fib::Node;
 
-    class Fibonacci : public Queue {
+    class Fibonacci : public PriorityQueue {
     public:
         /* Construye una cola */
         Fibonacci() = default;

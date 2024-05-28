@@ -1,13 +1,13 @@
 #ifndef HEAP_HPP
 #define HEAP_HPP
-#include "queue.hpp"
+#include "priqueue.hpp"
 #include "vector"
 
 
 
 namespace queue {
 
-    class Heap : public Queue {
+    class Heap : public PriorityQueue {
     public:
         /* Construye una cola */
         Heap() = default;

@@ -2,12 +2,11 @@
 #include <vector>
 #include <tuple>
 #include <float.h>
-#include <iostream>
-#include "../headers/queue/queue.hpp"
+#include "../headers/queue/priqueue.hpp"
 
 using namespace std;
 
-tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue* q){
+tuple<vector<int>, vector<double>> dijkstra(const Graph& g, PriorityQueue* q){
     int n = g.edges.size();
 
     /* 1. Definimos dos arreglos de tamaño |V |, distancias y previos. */
@@ -34,11 +33,6 @@ tuple<vector<int>, vector<double>> dijkstra(const Graph& g, Queue* q){
     while(!q->empty()){
         /* a) Obtenemos el par (d, v) con menor distancia en Q y lo eliminamos. */
         auto [v, d] = q->extractMin();
-
-        if(d != distancias[v]){
-            std::cout << "Error en la cola" << std::endl;
-            exit(1);
-        }
 
         /* b) Por cada vecino u del nodo v: */
         for(auto [u, w] : g.edges[v]){
