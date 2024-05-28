@@ -14,45 +14,42 @@
 *   @param e Cantidad de aristas del grafo.
 */
 Graph::Graph(int v, int e, int seed){
-    if(v < 2 || e < v - 1 || e > v*(v-1)/2){
-        printf("No se puede generar un grafo con %d vértices y %d aristas\n", v, e);
-        exit(10);
-    }
+    if(v < 2 || e < v - 1 || e > v*(v-1)/2)
+        throw std::runtime_error("No se puede generar un grafo con estos parámetros");
 
     srand(seed);
     edges.resize(v, std::vector<std::tuple<int, double>>());
 
-
-    for(int i = 1; i < v; i++){
-
-        /** w in (0, 1] */
-        double weight = (((double)rand()+1)/((double)RAND_MAX+1));
-
-        /** u in [1,..., i-1] */
-        int u = (i > 1)? rand()%(i-1) + 1 : 0;
-
-        connect(u, i, weight);
-    }
-
     std::vector<std::tuple<int, int>> vertices;
-    vertices.reserve(v*(v-1)/2 - (v-1));
+    vertices.reserve(v*(v+1)/2);
 
     for(int i = 0; i < v; i++)
         for(int j = i+1; j < v; j++)
-            vertices.push_back(std::make_tuple(i, j));
+            vertices.emplace_back(i, j);
+
+    for(int z = 1; z < v; z++){
+        double weight = (((double)rand()+1)/((double)RAND_MAX+1));
+        int u = rand() % z;
+        int pos = u*(u-1)/2 + u*(v-u) + (z-u) - 1;
+
+        if(u < 0 || u >= z)
+            throw std::runtime_error("Error en el nodo");
+
+        auto [a, b] = vertices[pos];
+        if(a != u || b != z || pos < 0 || pos >= vertices.size())
+            throw std::runtime_error("Error en la posición");
+
+        connect(u, z, weight);
+        swap(vertices[pos], vertices[z-1]);
+    }
     
-    std::shuffle(vertices.begin(), vertices.end(), std::default_random_engine(seed));
+    std::shuffle(vertices.begin()+v, vertices.end(), std::default_random_engine(seed));
 
     for(int i=0; i<e-(v-1); i++){
-        auto [u, v] = vertices[i];
+        auto [u, z] = vertices[i+v];
         double weight = (((double)rand()+1)/((double)RAND_MAX+1));
-        if(!isConnectedTo(u, v))
-            connect(u, v, weight);
-        else
-            e++;
+        connect(u, z, weight);
     }
-
-    return;
 }
 
 
@@ -62,10 +59,8 @@ Graph::Graph(int v, int e, int seed){
 *   @param w Peso de la arista que conecta u y v.
 */
 void Graph::connect (int u, int v, double w){
-    if(u == v) {
-        printf("No se pueden conectar un nodo consigo mismo\n");
-        exit(10);
-    }
+    if(u == v) 
+        throw std::runtime_error("No se pueden conectar un nodo consigo mismo");
 
     edges[u].push_back(std::make_tuple(v, w));
     edges[v].push_back(std::make_tuple(u, w));
@@ -77,7 +72,7 @@ void Graph::connect (int u, int v, double w){
 *   @param v Vértice destino.
 *   @return true si u y v están conectados, false en caso contrario.
 */
-bool Graph::isConnectedTo(int u, int v) const{
+bool Graph::isConnectedTo(int u, int v) const {
     for(auto [z, _] : edges[u])
         if(z == v) return true;
 
@@ -90,10 +85,9 @@ bool Graph::isConnectedTo(int u, int v) const{
 *   @param v Vértice destino.
 *   @return Peso de la arista que conecta u y v.
 */
-double Graph::getWeight(int u, int v) const{
+double Graph::getWeight(int u, int v) const {
     for(auto [z, w] : edges[u])
         if(z == v) return w;
 
-    std::cout << "Error en la arista de " << u << " a " << v << std::endl;
-    exit(10);
+    throw std::runtime_error("No existe la arista");
 }
