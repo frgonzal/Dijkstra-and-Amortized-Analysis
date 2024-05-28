@@ -1,26 +1,19 @@
 #include "../../headers/queue/fibonacci.hpp"
-#include <cstddef>
 #include <float.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
-
 
 using namespace queue;
 using namespace queue::Fib;
 
 /** PUBLIC */
 
-Fibonacci::~Fibonacci(){
-    for(int i=0; i<n; i++)
-        if(nodes[i] != nullptr)
-            delete nodes[i];
-};
+Fibonacci::~Fibonacci(){};
 
 void Fibonacci::heapify(int n){
     distances.resize(n, DBL_MAX);
-    nodes.resize(n, nullptr);
+    nodes.reserve(n);
 
     toMerge.resize(std::ceil(std::log2((double)n))+1, nullptr);
 
@@ -29,15 +22,15 @@ void Fibonacci::heapify(int n){
     linkedList = nullptr;
 
     distances[0] = 0.0;
-    nodes[0] = new Node(0);
+    nodes.emplace_back(0);
 
-    min = nodes[0];
-    insert(nodes[0]);
+    min = &nodes[0];
+    insert(&nodes[0]);
 
     for(int v=1; v<n; v++){
         distances[v] = DBL_MAX;
-        nodes[v] = new Node(v);
-        insert(nodes[v]);
+        nodes.push_back(v);
+        insert(&nodes[v]);
     }
 }
 
@@ -76,23 +69,17 @@ std::tuple<int, double> Fibonacci::extractMin(){
     }
     remove(x);
 
-    int v = x->vertex;
-    delete nodes[v];
-    nodes[v] = nullptr;
-
     consolidate();
-    return std::make_tuple(v, distances[v]);
+    return std::make_tuple(x->vertex, distances[x->vertex]);
 }
 
 
 void Fibonacci::decreaseKey(int node, double value){
-    if(nodes[node] == nullptr)
-        return;
     if(distances[node] <= value)
         return;
 
     distances[node] = value;
-    Node *x = nodes[node];
+    Node *x = &nodes[node];
 
     if(distances[node] < distances[min->vertex])
         min = x;
@@ -113,11 +100,8 @@ bool Fibonacci::empty(){
 
 /** Une dos nodos en una lista doblemente enlazada */
 void Fibonacci::link(Node* y, Node* x){
-    if(y == nullptr){
-        //x->left = x;
-        //x->right = x;
+    if(y == nullptr)
         return;
-    }
 
     Node *z = y->right;
 

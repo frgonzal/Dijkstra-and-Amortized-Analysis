@@ -61,7 +61,7 @@ namespace queue {
         *   tal que nodes[v] es el nodo del vertice
         *   v en la cola de Fibonacci.
         */
-        std::vector<Node*> nodes;
+        std::vector<Node> nodes;
 
         /** puntero al nodo con menor distancia en la cola. */
         Node* min;
