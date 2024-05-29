@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <random>
 #include <stdexcept>
+#include <iostream>
+#include <float.h>
 
 
 
@@ -11,10 +13,11 @@
 *   Genera un grafo con aristas aleatorias.
 *   @param v Cantidad de vértices del grafo.
 *   @param e Cantidad de aristas del grafo.
-*/
 Graph::Graph(int v, int e, int seed){
-    if(v < 2 || e < v - 1 || e > v*(v-1)/2)
-        throw std::runtime_error("No se puede generar un grafo con estos parámetros");
+    if(v < 2 || e < v - 1 || e > v*(v-1)/2){
+        std::cout << "No se puede generar un grafo con " << v << " vertices y " << e << " aristas\n";
+        throw std::runtime_error("Error en los parametros del grafo");
+    }
 
     srand(seed);
     edges.resize(v, std::vector<std::tuple<int, double>>());
@@ -50,6 +53,32 @@ Graph::Graph(int v, int e, int seed){
         connect(u, z, weight);
     }
 }
+*/
+Graph::Graph(int v, int e, int seed){
+    if(v < 2 || e < v - 1)
+        throw std::runtime_error("Error en los parametros del grafo");
+
+    srand(seed);
+    edges.resize(v, std::vector<std::tuple<int, double>>());
+
+    for(int z = 1; z < v; z++){
+        double weight = (((double)rand()+1)/((double)RAND_MAX+1));
+        int u = rand() % z;
+        connect(u, z, weight);
+    }
+    
+
+    for(int i=0; i<e-(v-1); i++){
+        int u = rand() % v;
+        int z;
+        do{
+            z = rand() % v;
+        }while(z == u);
+
+        double weight = (((double)rand()+1)/((double)RAND_MAX+1));
+        connect(u, z, weight);
+    }
+}
 
 
 /** Conecta 2 vertices en un grafo.
@@ -61,8 +90,8 @@ void Graph::connect(int u, int v, double w){
     if(u == v) 
         throw std::runtime_error("No se pueden conectar un nodo consigo mismo");
 
-    edges[u].push_back(std::make_tuple(v, w));
-    edges[v].push_back(std::make_tuple(u, w));
+    edges[u].emplace_back(v, w);
+    edges[v].emplace_back(u, w);
 }
 
 
@@ -85,8 +114,12 @@ bool Graph::isConnectedTo(int u, int v) const {
 *   @return Peso de la arista que conecta u y v.
 */
 double Graph::getWeight(int u, int v) const {
+    double weight = DBL_MAX;
     for(auto [z, w] : edges[u])
-        if(z == v) return w;
+        if(z == v) 
+            weight = std::min(weight, w);
 
-    throw std::runtime_error("No existe la arista");
+    if (weight == DBL_MAX)
+        throw std::runtime_error("No existe la arista");
+    return weight;
 }
