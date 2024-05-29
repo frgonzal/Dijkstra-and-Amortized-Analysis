@@ -25,7 +25,7 @@ public:
     virtual void decreaseKey(int node, double value) = 0;
 
     /** Verifica si la cola está vacía. */
-    virtual bool empty() = 0;
+    inline virtual bool empty() const = 0;
 };
 
 

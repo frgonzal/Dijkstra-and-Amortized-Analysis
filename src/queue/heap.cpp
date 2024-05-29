@@ -66,7 +66,7 @@ void Heap::decreaseKey(int node, double value) {
 }
 
 /** Verifica si la cola está vacía. */
-bool Heap::empty(){
+inline bool Heap::empty() const {
     return size == 0; 
 }
 

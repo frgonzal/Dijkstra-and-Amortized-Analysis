@@ -28,7 +28,7 @@ namespace queue {
         void decreaseKey(int node, double value) override;
 
         /** Verifica si la cola está vacía. */
-        bool empty() override;
+        inline bool empty() const override;
 
     private:
         /** Cantidad de vertices en la cola. */
