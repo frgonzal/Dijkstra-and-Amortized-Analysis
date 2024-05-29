@@ -2,6 +2,7 @@
 #define FIBONACCI_HPP
 #include "priqueue.hpp"
 #include <vector>
+#include <float.h>
 
 
 namespace queue {
@@ -9,7 +10,9 @@ namespace queue {
     namespace Fib {
         /** Estructura de un nodo en la cola de Fibonacci. */
         struct Node {
-            Node(int vertex) : vertex(vertex), parent(nullptr), child(nullptr), left(this), right(this), marked(false), degree(0){};
+            Node(int vertex) 
+                : vertex(vertex), parent(nullptr), child(nullptr), left(this), right(this), marked(false), degree(0), distance(DBL_MAX){};
+
             ~Node() = default;
 
             const int vertex;     // vertice
@@ -19,6 +22,7 @@ namespace queue {
             Node* right;
             bool marked;
             int degree;     // grado del nodo, si es un B_k entonces degree = k
+            double distance; // distancia al nodo raiz
         };
     }
     using Fib::Node;
@@ -44,20 +48,13 @@ namespace queue {
         void decreaseKey(int node, double value) override;
 
         /** Verifica si la cola está vacía. */
-        bool empty() override;
+        inline bool empty() const override;
 
     private:
-        /** Cantidad de vertices en la cola. */
-        int n;
-
-        /** Cantidad de nodos en la cola, no confundir con n! */
-        int size;
-
-        std::vector<double> distances;
-
+        /** Vector A para la consolidación de la cola de Fibonacci. */
         std::vector<Node*> toMerge;
 
-        /** punteros a los nodos de las colas, 
+        /** Nodos de la cola de Fibonacci,
         *   tal que nodes[v] es el nodo del vertice
         *   v en la cola de Fibonacci.
         */
@@ -66,22 +63,23 @@ namespace queue {
         /** puntero al nodo con menor distancia en la cola. */
         Node* min;
 
+        /** Puntero al primer nodo en la cola de Fibonacci. */
         Node* linkedList;
 
         /** Une dos nodos en la cola de Fibonacci. */
-        void link(Node* y, Node* x);
+        inline void link(Node* x, Node* y);
 
         /** Une dos colas de Fibonacci. */
-        Node* merge(Node* y, Node* x);
+        Node* merge(Node* x, Node* y);
 
         /** Realiza la consolidación de la cola de Fibonacci. */
-        void consolidate();
+        inline void consolidate();
 
         /** Inserta un nodo en la cola de Fibonacci. */
-        void insert(Node* x);
+        inline void insert(Node* x);
 
         /** Realiza el corte de un nodo en la lista enlazada. */
-        void remove(Node* x);
+        inline void remove(Node* x);
 
         /** Realiza el corte de un nodo. */
         void cut(Node* x);
