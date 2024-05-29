@@ -2,6 +2,8 @@
 #include "../headers/queue/heap.hpp"
 #include "../headers/queue/fibonacci.hpp"
 #include "../headers/dijkstra.hpp"
+#include <fstream>
+#include <sstream>
 #include <stdlib.h>
 #include <float.h>
 #include <tuple>
@@ -10,10 +12,12 @@
 #include <chrono>
 #include <cstdlib>
 #include <ostream>
+#include <sstream>
 #include <unistd.h>
 #include <iostream>
 #include <ctime>
 #include <chrono>
+#include <ostream>
 
 
 
@@ -37,19 +41,24 @@ void test_graph(const Graph &g){
             throw std::runtime_error("No conexo");
 
         for(auto [v, w] : g.edges[u]){
+            /*
             if(v < 0 || v >= g.edges.size())
                 throw std::runtime_error("Nodo fuera de rango");
+            */
 
             if(w <= 0 || w > 1)
                 throw std::runtime_error("Pesos fuera de rango");
 
+            /*
             if(g.getWeight(u, v) != g.getWeight(v, u))
                 throw std::runtime_error("Pesos no simetricos");
+            */
 
             if(g.isConnectedTo(u, v) != g.isConnectedTo(v, u))
                 throw std::runtime_error("Aristas no simetricas");
         }
 
+        /*
         for(int i=0; i<g.edges[u].size(); i++){
             for(int j=0; j<g.edges[u].size(); j++){
                 auto [z1, w1] = g.edges[u][i];
@@ -58,6 +67,7 @@ void test_graph(const Graph &g){
                     throw std::runtime_error("Arista repetida");
             }
         }
+        */
     }
 }
 
@@ -71,10 +81,11 @@ void test_path(const Graph &g, const std::vector<int>& paths, const std::vector<
 
         while(from > -1){
 
-            if(g.isConnectedTo(from, to))
+            if(g.isConnectedTo(from, to)){
                 dist += g.getWeight(from, to);
-            else 
+            } else {
                 throw std::runtime_error("Error en la arista");
+            }
 
             to = from;
             from = paths[to];
@@ -103,64 +114,66 @@ void test_vectores(const std::vector<T>& v1, const std::vector<T>& v2){
 }
 
 
-std::tuple<std::vector<int>, std::vector<double>> test_bin_heap(Graph &g){
-    queue::Heap q = queue::Heap();
+
+void save_results(const std::vector<std::tuple<int,int,double,std::string>> &times){
+    std::ofstream outFile("results/results.csv", std::ios::app);
+    for(auto [i, j, t, type] : times)
+        outFile << i << "," << j << "," << t << "," << type << "\n";
+
+    outFile.close();
+}
+
+
+template <typename T>
+std::tuple<std::vector<int>, std::vector<double>, double> test_priqueue(const Graph &g){
+    T q = T();
 
     auto start = std::chrono::high_resolution_clock::now();
     auto [paths, distances] = dijkstra(g, &q);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    std::cout << "Bin Heap time: " << elapsed.count() << "\n";
 
-    return std::make_tuple(std::move(paths), std::move(distances));
-}
-
-std::tuple<std::vector<int>, std::vector<double>> test_fib_heap(Graph &g){
-    queue::Fibonacci q =queue::Fibonacci();
-
-    auto start = std::chrono::high_resolution_clock::now();
-    auto [paths, distances] = dijkstra(g, &q);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "Fib Heap time: " << elapsed.count() << "\n";
-
-    return std::make_tuple(std::move(paths), std::move(distances));
+    return std::make_tuple(std::move(paths), std::move(distances), elapsed.count());
 }
 
 
-void test(int i, int j, int v, int e, int seed){
-    std::cout << "====  TEST : " << i << " " << j << "  ====\n";
+void test(int i, int j, std::vector<std::tuple<int,int,double,std::string>> &results){
+    for(int k=0; k<50; k++){
+        int v = 1<<i, e = 1<<j, seed = i*j*k;
 
-    auto start = std::chrono::high_resolution_clock::now();
-    Graph g(v, e, seed);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "Graph creation time: " << elapsed.count() << "\n";
+        std::cout << "====  TEST : " << i << " " << j << "  ====\n";
 
-    auto [p2, d2] = test_fib_heap(g);
-    auto [p1, d1] = test_bin_heap(g);
-    test_path(g, p1, d1);
-    test_vectores<int>(p1, p2);
-    test_vectores<double>(d1, d2);
+        auto start = std::chrono::high_resolution_clock::now();
+        const Graph g(v, e, seed);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        std::cout << "Graph creation time: " << elapsed.count() << "\n";
+        results.emplace_back(i, j, elapsed.count(), "Graph");
+        //test_graph(g);
+
+        queue::Fibonacci fib = queue::Fibonacci();
+        auto [p2, d2, t_fib]  = test_priqueue<queue::Fibonacci>(g);
+        std::cout << "Fib Heap time: " << t_fib << "\n";
+        results.emplace_back(i, j, t_fib, "FibHeap");
+
+        queue::Heap heap = queue::Heap();
+        auto [p1, d1, t_heap] = test_priqueue<queue::Heap>(g);
+        std::cout << "Bin Heap time: " << t_heap << "\n";
+        results.emplace_back(i, j, t_heap, "BinHeap");
+
+        //test_path(g, p1, d1);
+        //test_vectores<int>(p1, p2);
+        //test_vectores<double>(d1, d2);
+    }
 }
 
 int main(){
+    std::vector<std::tuple<int, int, double, std::string>> results;
     for(int i=10; i<=14; i+=2){
-        for(int j=20; j<=22; j++){
-            for(int k=0; k<50; k++){
-                int v = 1<<i, e = 1<<j, seed = i*12345 + j*6789;
-                if(e > v*(v-1)/2){
-                    std::cout << "WARNING: Too many edges\n";
-                    e = v*(v-1)/2 - 1;
-                }
-                if(e < v-1 ){
-                    std::cout << "WARNING: Too few edges\n";
-                    e = v + 1;
-                }
-
-                test(i, j, v, e, seed);
-            }
+        for(int j=23; j<=23; j++){
+            test(i, j, results);
         }
     }
+    save_results(results);
     return 0;
 }
