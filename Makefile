@@ -7,7 +7,7 @@ CFLAGS =
 LDLIBS=
 
 TARGET=./build/main
-TEST=./build/test
+TEST=./build/experimentation
 
 ## AQUI INCLUIR LOS ARCHIVOS .C 
 ## excepto main y test
@@ -44,7 +44,7 @@ run: $(OBJS) $(TARGET).o
 	@ $(CC) $(CFLAGS) $^ -o $(TARGET) $(LDLIBS) && $(TARGET)
 
 ## Compila el ejecutable de los test y ejecuta
-test: $(OBJS) $(TEST).o
+run-exp: $(OBJS) $(TEST).o
 	@ $(CC) $(CFLAGS) $^ -o $(TEST) $(LDLIBS) && $(TEST)
 
 ## borra todo lo que se compilo
@@ -55,7 +55,6 @@ clean: $(wildcard build/*.o)
 
 
 help:
-	@echo " to run main --> make run"
-	@echo " to run test --> make test"
-	
-
+	@echo "	make run:	compiles and runs the main file"
+	@echo "	make run-exp:	compiles and runs the experimentation file"
+	@echo "	make clean:	deletes all the compiled files"
