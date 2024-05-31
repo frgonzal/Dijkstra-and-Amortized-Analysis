@@ -117,6 +117,7 @@ void test_vectores(const std::vector<T>& v1, const std::vector<T>& v2){
 
 void save_results(const std::vector<std::tuple<int,int,double,std::string>> &times){
     std::ofstream outFile("results/results.csv", std::ios::app);
+
     for(auto [i, j, t, type] : times)
         outFile << i << "," << j << "," << t << "," << type << "\n";
 
@@ -137,19 +138,18 @@ std::tuple<std::vector<int>, std::vector<double>, double> test_priqueue(const Gr
 }
 
 
-void test(int i, int j, std::vector<std::tuple<int,int,double,std::string>> &results){
-    for(int k=0; k<50; k++){
-        int v = 1<<i, e = 1<<j, seed = i*j*k;
+void test(int i, int j){
+    std::vector<std::tuple<int, int, double, std::string>> results;
+    for(int k=1; k<=100; k++){
+        int v = 1<<i, e = 1<<j, seed = i*j*k*123 + 543253;
 
-        std::cout << "====  TEST : " << i << " " << j << "  ====\n";
+        std::cout << "k: " << k << " v: " << v << " e: " << e << std::endl;
 
         auto start = std::chrono::high_resolution_clock::now();
         const Graph g(v, e, seed);
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;
         std::cout << "Graph creation time: " << elapsed.count() << "\n";
-        results.emplace_back(i, j, elapsed.count(), "Graph");
-        //test_graph(g);
 
         queue::Fibonacci fib = queue::Fibonacci();
         auto [p2, d2, t_fib]  = test_priqueue<queue::Fibonacci>(g);
@@ -165,15 +165,15 @@ void test(int i, int j, std::vector<std::tuple<int,int,double,std::string>> &res
         //test_vectores<int>(p1, p2);
         //test_vectores<double>(d1, d2);
     }
+    save_results(results);
 }
 
 int main(){
-    std::vector<std::tuple<int, int, double, std::string>> results;
-    for(int i=10; i<=14; i+=2){
-        for(int j=23; j<=23; j++){
-            test(i, j, results);
+    for(int j=16; j<=27; j++){
+        for(int i=10; i<=14; i+=2){
+            std::cout << "====  TEST : " << i << " " << j << "  ====\n";
+            test(i, j);
         }
     }
-    save_results(results);
     return 0;
 }
