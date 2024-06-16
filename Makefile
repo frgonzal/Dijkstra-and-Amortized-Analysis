@@ -1,7 +1,7 @@
 CC = g++
 
 ## agregar flags? como -g o -Wall
-CFLAGS =
+CFLAGS = -std=c++17 -Wall
 
 ## agregar librerias extra
 LDLIBS=
@@ -40,21 +40,41 @@ all:
 	@ $(CC) $(CFLAGS)  -c $< -o $@
 
 ## Compila el ejecutable del main y ejecuta
+.PHONY: run
 run: $(OBJS) $(TARGET).o
 	@ $(CC) $(CFLAGS) $^ -o $(TARGET) $(LDLIBS) && $(TARGET)
 
 ## Compila el ejecutable de los test y ejecuta
+.PHONY: run-exp
 run-exp: $(OBJS) $(TEST).o
-	@ $(CC) $(CFLAGS) $^ -o $(TEST) $(LDLIBS) && $(TEST)
+	@ $(CC) $(CFLAGS) $^ -o $(TEST) $(LDLIBS)
+ifeq ($(test-and-save), 1) 
+	@ $(TEST) --test --save
+else ifeq ($(save), 1) 
+	@ $(TEST) --save
+else ifeq ($(test), 1) 
+	@ $(TEST) --test
+else
+	@ $(TEST)
+endif
+
 
 ## borra todo lo que se compilo
+.PHONY: clean
 clean: $(wildcard build/*.o)
 	@ rm -f $(TARGET)
 	@ rm -f $(TEST)
 	@ rm -f $^
 
-
+.PHONY: help
 help:
-	@echo "	make run:	compiles and runs the main file"
-	@echo "	make run-exp:	compiles and runs the experimentation file"
-	@echo "	make clean:	deletes all the compiled files"
+	@echo "Usage: make [target] [options]"
+	@echo "Targets:"
+	@echo "  run            Build and run the main program"
+	@echo "  run-exp        Build and run the experimentation program"
+	@echo "  clean          Clean the build files"
+	@echo "  help           Display this help message"
+	@echo "Options:"
+	@echo "  test=1   Test the experimentation results"
+	@echo "  save=1	  Save the time results"
+	@echo "  test-and-save=1"

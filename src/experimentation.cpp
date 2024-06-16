@@ -18,6 +18,12 @@
 #include <ctime>
 #include <chrono>
 #include <ostream>
+#include <cstring>
+
+
+/** Modos de ejecución */
+bool test_mode = false;
+bool save_mode = false;
 
 
 
@@ -172,15 +178,29 @@ void test(int i, int j){
         results.emplace_back(i, j, t_heap, "BinHeap");
 
         /* Verificar resultados */
-        test_graph(g);
-        test_path(g, p1, d1);
-        test_vectores<int>(p1, p2);
-        test_vectores<double>(d1, d2);
+        if(test_mode){
+            test_graph(g);
+            test_path(g, p1, d1);
+            test_vectores<int>(p1, p2);
+            test_vectores<double>(d1, d2);
+        }
     }
-    //save_results(results);
+    if(save_mode)
+        save_results(results);
 }
 
-int main(){
+int main(int argc, char *argv[]){
+    if(argc > 1){
+        for(int i=1; i<argc; i++){
+            if(std::strcmp(argv[i], "--test") == 0){
+                test_mode = true;
+            }else if(std::strcmp(argv[i], "--save") == 0){
+                save_mode = true;
+            }
+        }
+    }
+
+
     for(int j=16; j<=27; j++){
         for(int i=10; i<=14; i+=2){
             std::cout << "====  TEST : " << i << " " << j << "  ====\n";
