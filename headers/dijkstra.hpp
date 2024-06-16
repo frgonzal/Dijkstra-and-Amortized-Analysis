@@ -14,8 +14,8 @@
 *   se describe de la siguiente manera.
 *   @param g Grafo con pesos positivos en sus aristas.
 *   @param q Estructura que permite obtener y eliminar el par con menor distancia.
-*   @return Tupla con 2 vectores, el primero contiene los padres de cada nodo en el árbol de caminos más cortos
-*           y el segundo contiene las distancias de cada nodo a la raíz.
+*   @return  Tupla con 2 vectores, el primero contiene los padres de cada nodo en el árbol de caminos más cortos
+*            y el segundo contiene las distancias de cada nodo a la raíz.
 */ 
 std::tuple<std::vector<int>, std::vector<double>> dijkstra(const Graph& g, PriorityQueue* q);
 

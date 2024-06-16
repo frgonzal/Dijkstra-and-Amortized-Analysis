@@ -6,7 +6,7 @@
 
 using namespace queue;
 
-/** Construye una cola a partir de una cantidad de elementos. */
+
 void Heap::heapify(int n) {
     this->n = n; 
     this->size = n;
@@ -49,10 +49,7 @@ std::tuple<int, double> Heap::extractMin() {
     return minElem; 
 }
 
-/** Disminuye el valor de un nodo en la cola. 
-*   @param node  Nodo a disminuir.
-*   @param value Nuevo valor del nodo.
-*/
+
 void Heap::decreaseKey(int node, double value) {
     int index = position[node];
 
@@ -65,10 +62,11 @@ void Heap::decreaseKey(int node, double value) {
     siftUp(index);
 }
 
-/** Verifica si la cola está vacía. */
+
 inline bool Heap::empty() const {
     return size == 0; 
 }
+
 
 void Heap::siftDown(int index) {
     int minIndex = index; 
@@ -91,6 +89,7 @@ void Heap::siftDown(int index) {
     }
 }
 
+
 void Heap::siftUp(int index) {
     while (index > 0 && heap[index].second < heap[parent(index)].second) { 
         std::swap(heap[index], heap[parent(index)]); 
@@ -98,4 +97,19 @@ void Heap::siftUp(int index) {
         position[heap[parent(index)].first] = parent(index); 
         index = parent(index); 
     }
+}
+
+
+int Heap::leftChild(int index) { 
+    return 2 * index + 1; 
+}
+
+
+int Heap::rightChild(int index) { 
+    return 2 * index + 2; 
+}
+
+
+int Heap::parent(int index) { 
+    return (index - 1) / 2; 
 }

@@ -8,6 +8,7 @@
 namespace queue {
 
     namespace Fib {
+
         /** Estructura de un nodo en la cola de Fibonacci. */
         struct Node {
             Node(int vertex) 
@@ -15,18 +16,24 @@ namespace queue {
 
             ~Node() = default;
 
-            const int vertex;     // vertice
+            const int vertex;   // vertice
             Node* parent;
             Node* child;    
             Node* left;
             Node* right;
             bool marked;
-            int degree;     // grado del nodo, si es un B_k entonces degree = k
-            double distance; // distancia al nodo raiz
+            int degree;         // grado del nodo, si es un B_k entonces degree = k
+            double distance;    // distancia al nodo raiz
         };
     }
     using Fib::Node;
 
+    /** Clase que implementa una cola de prioridad utilizando una Cola de Fibonacci.
+     *  
+     *  La cola de prioridad permite almacenar pares de la forma (nodo, distancia) y obtener
+     *  y eliminar el par con menor distancia. Además, permite modificar la distancia de un nodo
+     *  en la cola.
+     */
     class Fibonacci : public PriorityQueue {
     public:
         /* Construye una cola */
