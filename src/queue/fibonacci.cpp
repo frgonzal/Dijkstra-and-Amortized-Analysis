@@ -42,7 +42,7 @@ inline void Fibonacci::consolidate(){
     }
 
     //min = nullptr;
-    for(int i=0; i<toMerge.size(); i++){
+    for(int i=0; i<(int)toMerge.size(); i++){
         if(toMerge[i] != nullptr){
             insert(toMerge[i]);
             if(min == nullptr || toMerge[i]->distance < min->distance)
