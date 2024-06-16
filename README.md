@@ -6,26 +6,19 @@ El proyecto se construyo en un sistema operativo con linux y se utilizo
 la funcionalidad "make" para la compilación y ejecución del proyecto.    
 Por lo anterior, es necesario tener la funcionalidad "make" para ejecutar los test y el main.
 
-### Comandos para ejecutar el proyecto
+Se necesita std=c++17.
 
-    make run
-    make run-exp
-
-### Comandos de ayuda
-
-    make help
-    make clean
-
-### make run
-Este es el archivo para utilizar las distintas funciones creadas.
-
-### make run-exp
-Compila y ejecuta el archivo "experimentation", que contiene el código utilizado para la experimentación.
-Además, run-exp escribirá las pruebas realizadas en la carpeta "./results".
-
-### make clean
-Permite borrar los ejecutables creados.
-
+### Ejecutar
+	Uso: make [target] [options]
+	Targets:
+	    run            Compila y ejecuta archivo main
+	    run-exp        Compila y ejecuta archivo experimentation
+	    clean          Limpia los archivos generados
+	    help           Mensaje de ayuda
+	Options:
+	    test=1          Ejecutar test que comprueben resultados de la experimentación
+	    save=1	        Guardar resultados de la experimentación
+	    test-and-save=1 Ejecutar test y guardar resultados
 
 ## Estructura del proyecto
 
