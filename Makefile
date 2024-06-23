@@ -58,6 +58,11 @@ else
 	@ $(TEST)
 endif
 
+make zip:
+	zip -r Tarea2.zip \
+	./build/ ./headers/ ./src/\
+	./results/img/ ./results/requirements.txt ./results/results.csv ./results/results.ipynb \
+	./Makefile ./README.md
 
 ## borra todo lo que se compilo
 .PHONY: clean
