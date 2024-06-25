@@ -1,7 +1,7 @@
 CC = g++
 
 ## agregar flags? como -g o -Wall
-CFLAGS = -std=c++17 -Wall
+CFLAGS = -std=c++17
 
 ## agregar librerias extra
 LDLIBS=

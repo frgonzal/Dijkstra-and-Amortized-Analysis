@@ -194,7 +194,8 @@ int main(int argc, char *argv[]){
         for(int i=1; i<argc; i++){
             if(std::strcmp(argv[i], "--test") == 0){
                 test_mode = true;
-            }else if(std::strcmp(argv[i], "--save") == 0){
+            }
+            if(std::strcmp(argv[i], "--save") == 0){
                 save_mode = true;
             }
         }
