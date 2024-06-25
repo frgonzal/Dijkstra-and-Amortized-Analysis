@@ -27,7 +27,7 @@ OBJS = $(SRC:./src/%.cpp=./build/%.o)
 
 
 all:
-	@echo " MTree implementation proyect"
+	@echo " Dijkstra with Priority Queues"
 	@echo ""
 	@echo " use \"make help\" to get more info"
 
@@ -58,7 +58,7 @@ else
 	@ $(TEST)
 endif
 
-make zip:
+zip:
 	zip -r Tarea2.zip 									\
 		./build/ ./headers/ ./src/	 					\
 		./results/img/ ./results/requirements.txt 		\
