@@ -59,10 +59,12 @@ else
 endif
 
 make zip:
-	zip -r Tarea2.zip \
-	./build/ ./headers/ ./src/\
-	./results/img/ ./results/requirements.txt ./results/results.csv ./results/results.ipynb \
-	./Makefile ./README.md
+	zip -r Tarea2.zip 									\
+		./build/ ./headers/ ./src/	 					\
+		./results/img/ ./results/requirements.txt 		\
+		./results/results.csv ./results/results.ipynb 	\
+		./Makefile ./README.md 							\
+		./Informe.pdf
 
 ## borra todo lo que se compilo
 .PHONY: clean
