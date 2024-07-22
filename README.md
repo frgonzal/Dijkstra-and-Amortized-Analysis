@@ -1,54 +1,48 @@
-# Dijkstra y análisis amortizado
+# Dijkstra and Amortized Analysis
 
-## Ejecutar Proyecto
-### Necesario!
-El proyecto se construyo en un sistema operativo con linux y se utilizo
-la funcionalidad "make" para la compilación y ejecución del proyecto.    
-Por lo anterior, es necesario tener la funcionalidad "make" para ejecutar los test y el main.
+## Running the Project
+### Required!
+The project was built on a Linux operating system and used the "make" functionality for compiling and running the project.  
+Therefore, it is necessary to have the "make" functionality to run the tests and the main program.
 
-#### Versión del compilador
+#### Compiler Version
     g++ (GCC) 14.1.1
 
-#### Versión estándar con la que se compilo
+#### Standard Version Used for Compilation
     std=c++17
 
+### Running
+    Usage: make [target] [options]
+    Targets:
+        run            Compiles and runs the main file
+        run-exp        Compiles and runs the experimentation file
+        clean          Cleans up generated files
+        help           Help message
+    Options:
+        test=1          Run tests to check the results of the experimentation
+        save=1          Save the results of the experimentation
+        test-and-save=1 Run tests and save results
 
-### Ejecutar
-	Uso: make [target] [options]
-	Targets:
-	    run            Compila y ejecuta archivo main
-	    run-exp        Compila y ejecuta archivo experimentation
-	    clean          Limpia los archivos generados
-	    help           Mensaje de ayuda
-	Options:
-	    test=1          Ejecutar test que comprueben resultados de la experimentación
-	    save=1	        Guardar resultados de la experimentación
-	    test-and-save=1 Ejecutar test y guardar resultados
-
-
-### Ejecutar experimentación de la Tarea
-Para ejectuar todos los experimentos de la tarea basta con ejecutar:
+### Running Task Experimentation
+To execute all the experiments for the task, simply run:
 
     make run-exp
 
-Esto ejectuará la experimentación pedida en la tarea.    
-Se crean grafos de $2^i$ vertices y $2^j$ aristas, con $i\in\{10,12,14\}$ y $j\in\{16,...,25\}$.    
-Por cada combinación de de $i$ y $j$ se crean 100 grafos distintos y se compara el rendimiento del algoritmo de Dijkstra cuando se utiliza una cola de fibonacci contra el mismo algoritmo cuando se utiliza un heap. 
+This will execute the requested experimentation for the task.  
+Graphs with $2^i$ vertices and $2^j$ edges are created, with $i\in\{10,12,14\}$ and $j\in\{16,...,25\}$.  
+For each combination of $i$ and $j$, 100 distinct graphs are created, and the performance of Dijkstra's algorithm is compared when using a Fibonacci queue against the same algorithm when using a heap.
 
+If you run "make run-exp save=1", the results will be saved in a "results.csv" file, from which information will later be retrieved to generate comparative graphs.
 
-Si se ejecuta "make run-exp save=1" entonces se guardaran los resultados de lo anterior en un archivo "results.csv", del cual luego se recupera la información para generar graficos comparativos.
-
-
-
-## Estructura del proyecto
+## Project Structure
 
      .
-    ├──  build                 ==> archivos ejecutables
+    ├──  build                 ==> executable files
     │   ├──  experimentation
     │   ├──  experimentation.o
     │   ├──  main
     │   └──  main.o
-    ├──  headers               ==> headers de todo el proyecto
+    ├──  headers               ==> headers for the entire project
     │   ├──  dijkstra.hpp
     │   ├──  graph.hpp
     │   └──  queue
@@ -57,11 +51,8 @@ Si se ejecuta "make run-exp save=1" entonces se guardaran los resultados de lo a
     │       └──  priqueue.hpp
     ├──  Makefile              
     ├──  README.md
-    ├──  results               ==> carpeta donde se guardan y analizan los resultados
-    │   ├──  results.csv
-    │   ├── 󰌠 requirements.txt
-    │   └──  results.ipynb
-    └── 󱧼 src                   ==> archivos cpp con el código del proyecto
+    ├──  results/              ==> folder where results are saved and analyzed
+    └── 󱧼 src                   ==> cpp files with the project code
         ├──  dijkstra.cpp
         ├──  experimentation.cpp
         ├──  graph.cpp
@@ -69,12 +60,3 @@ Si se ejecuta "make run-exp save=1" entonces se guardaran los resultados de lo a
         └──  queue
             ├──  fibonacci.cpp
             └──  heap.cpp
-
-
-## Resultados
-
-Los resultados de la experimentación se encuentran disponibles en el archivo results.ipynb,
-el cual lee los archivos generados por "experimentation" para generar gráficos y figuras con la información
-obtenida.    
-Para poder ejecutar el .ipynb, se cuenta con un archivo requirements.txt al interior de la carpeta ./resultados con todos los módulos necesarios.
-
